@@ -1,4 +1,4 @@
-<!-- source: 1d964213251f -->
+<!-- source: 2a3a8e2cef04 -->
 
 # 🌟 Modely Vibe 🌟
 
@@ -52,6 +52,13 @@ Podporuje streamování a nejlépe se hodí pro diktování.
 
 [👉 Zobrazit model](https://huggingface.co/vibe-app/nemotron-3.5-asr-streaming-0.6b-gguf)  
 [🔽 Stáhnout Q4_K_M](https://huggingface.co/vibe-app/nemotron-3.5-asr-streaming-0.6b-gguf/resolve/main/nemotron-3.5-asr-streaming-0.6b-Q4_K_M.gguf?download=true)
+
+### 🀄 SenseVoice Small
+
+Engine FunASR. Podporuje čínštinu, kantonštinu, angličtinu, japonštinu a korejštinu s vysokou vícejazyčnou přesností při malé velikosti.
+
+[👉 Rychlé nastavení](vibe://download/?url=https://huggingface.co/FunAudioLLM/SenseVoiceSmall-GGUF/resolve/main/sensevoice-small-q8.gguf)  
+[🔽 Přímé stažení](https://huggingface.co/FunAudioLLM/SenseVoiceSmall-GGUF/resolve/main/sensevoice-small-q8.gguf?download=true)
 
 ### Modely optimalizované pro jiné jazyky
 

@@ -174,7 +174,34 @@ export interface ModelMetadata {
 interface EngineSpecificOptions {
 	init_prompt?: string
 	translate?: boolean
+	lang?: string
+	n_threads?: number
+	temperature?: number
+	max_text_ctx?: number
+	word_timestamps?: boolean
+	max_sentence_len?: number
+	sampling_strategy?: string
+	best_of?: number
+	beam_size?: number
 }
+
+/** Native ASR keeps its own decoding schedule: server rejects every whisper tuning knob. */
+export function isNativeAsr(capabilities: ModelCapabilities | null | undefined) {
+	return capabilities?.engine === 'sensevoice'
+}
+
+const WHISPER_OPTIONS = [
+	'init_prompt',
+	'translate',
+	'n_threads',
+	'temperature',
+	'max_text_ctx',
+	'word_timestamps',
+	'max_sentence_len',
+	'sampling_strategy',
+	'best_of',
+	'beam_size',
+] as const
 
 /**
  * Drop the Whisper-only options a model cannot use instead of letting server reject the run.
@@ -184,6 +211,12 @@ interface EngineSpecificOptions {
 export function withoutUnsupportedOptions<T extends EngineSpecificOptions>(options: T, capabilities: ModelCapabilities | null | undefined): T {
 	if (!capabilities) return options
 	const next = { ...options }
+	if (isNativeAsr(capabilities)) {
+		for (const key of WHISPER_OPTIONS) delete next[key]
+		// SenseVoice always detects the language itself; the saved language is for whisper.
+		next.lang = 'auto'
+		return next
+	}
 	if (!capabilities.text_prompts) delete next.init_prompt
 	if (!capabilities.translation) delete next.translate
 	return next

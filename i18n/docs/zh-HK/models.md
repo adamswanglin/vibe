@@ -1,4 +1,4 @@
-<!-- source: 1d964213251f -->
+<!-- source: 2a3a8e2cef04 -->
 
 # 🌟 Vibe 模型 🌟
 
@@ -52,6 +52,13 @@
 
 [👉 查看模型](https://huggingface.co/vibe-app/nemotron-3.5-asr-streaming-0.6b-gguf)  
 [🔽 下載 Q4_K_M](https://huggingface.co/vibe-app/nemotron-3.5-asr-streaming-0.6b-gguf/resolve/main/nemotron-3.5-asr-streaming-0.6b-Q4_K_M.gguf?download=true)
+
+### 🀄 SenseVoice Small
+
+FunASR 引擎，支援中文、粵語、英文、日文和韓文，體積小巧，多語言識別準確率出色。
+
+[👉 Magic Setup](vibe://download/?url=https://huggingface.co/FunAudioLLM/SenseVoiceSmall-GGUF/resolve/main/sensevoice-small-q8.gguf)  
+[🔽 直接下載](https://huggingface.co/FunAudioLLM/SenseVoiceSmall-GGUF/resolve/main/sensevoice-small-q8.gguf?download=true)
 
 ### 針對其他語言優化的模型
 

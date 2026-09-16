@@ -1,4 +1,4 @@
-<!-- source: 1d964213251f -->
+<!-- source: 2a3a8e2cef04 -->
 
 # 🌟 Vibe-Modelle 🌟
 
@@ -52,6 +52,13 @@ Unterstützt Streaming und eignet sich am besten für Diktate.
 
 [👉 Modell ansehen](https://huggingface.co/vibe-app/nemotron-3.5-asr-streaming-0.6b-gguf)  
 [🔽 Q4_K_M herunterladen](https://huggingface.co/vibe-app/nemotron-3.5-asr-streaming-0.6b-gguf/resolve/main/nemotron-3.5-asr-streaming-0.6b-Q4_K_M.gguf?download=true)
+
+### 🀄 SenseVoice Small
+
+FunASR-Engine. Unterstützt Chinesisch, Kantonesisch, Englisch, Japanisch und Koreanisch bei geringer Größe mit hoher mehrsprachiger Genauigkeit.
+
+[👉 Magic Setup](vibe://download/?url=https://huggingface.co/FunAudioLLM/SenseVoiceSmall-GGUF/resolve/main/sensevoice-small-q8.gguf)  
+[🔽 Direktdownload](https://huggingface.co/FunAudioLLM/SenseVoiceSmall-GGUF/resolve/main/sensevoice-small-q8.gguf?download=true)
 
 ### Für andere Sprachen optimierte Modelle
 

@@ -3,6 +3,7 @@ members = [
     "crates/diarize-rs",
     "crates/nemotron-rs",
     "crates/parakeet-rs",
+    "crates/sensevoice-rs",
     "crates/vibe-server",
     "crates/vad-rs",
     "crates/ggml-rs-sys",

@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom'
 import { load } from '@tauri-apps/plugin-store'
 import { useStoreValue } from '~/lib/use-store-value'
 import { collectLogs, getPrettyVersion, getVersionNumber } from '~/lib/logs'
-import { cleanupPartialDownloads, isModelFileUsable, listInstalledModels, type InstalledModel, type ModelMetadata } from '~/lib/model'
+import { cleanupPartialDownloads, isModelFileUsable, isNativeAsr, listInstalledModels, type InstalledModel, type ModelMetadata } from '~/lib/model'
 import { buildSkill, installSkill, type SkillTarget } from '~/lib/skill'
 
 export interface GpuDevice {
@@ -235,6 +235,8 @@ export function viewModel() {
 	function applyModelLanguage(metadata: ModelMetadata | null) {
 		if (!metadata) return
 		const capabilities = metadata.capabilities
+		// SenseVoice detects the language itself, so the saved whisper language stays untouched.
+		if (isNativeAsr(capabilities)) return
 		const currentLanguage = preference.modelOptions.lang
 		const isSupported = currentLanguage === 'auto' ? capabilities.language_detection : capabilities.languages.includes(currentLanguage)
 		if (isSupported) return

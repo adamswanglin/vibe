@@ -1,3 +1,5 @@
+pub(crate) mod sensevoice;
+
 use anyhow::{bail, Context as _};
 use serde::Serialize;
 use whisper_rs::{ContextOptions, Segment, StreamCallbacks, TranscribeOptions, TranscribeResult};
@@ -18,6 +20,7 @@ pub struct EngineCapabilities {
 #[allow(clippy::large_enum_variant)]
 pub enum Engine {
     Whisper(whisper_rs::Context),
+    SenseVoice(sensevoice::SenseVoice),
     Nemotron {
         model: Box<nemotron_rs::Model>,
         vad: Option<(String, vad_rs::Vad)>,
@@ -30,11 +33,19 @@ pub enum Engine {
 
 impl Engine {
     pub fn requires_vad(&self) -> bool {
-        matches!(self, Self::Nemotron { .. } | Self::Parakeet { .. })
+        matches!(self, Self::SenseVoice(_) | Self::Nemotron { .. } | Self::Parakeet { .. })
     }
 
     pub fn load(path: &str, options: ContextOptions) -> anyhow::Result<Self> {
         if path.ends_with(".gguf") {
+            if sensevoice_rs::Model::metadata(path).is_ok_and(|info| info.architecture.starts_with("sensevoice")) {
+                sensevoice::validate_device(options.gpu_device)?;
+                return Ok(Self::SenseVoice(sensevoice::SenseVoice::load(
+                    path,
+                    options.no_gpu,
+                    options.gpu_device,
+                )?));
+            }
             if let Ok(info) = parakeet_rs::Model::metadata(path) {
                 if info.architecture == "parakeet" && info.variant.contains("v3") {
                     return Ok(Self::Parakeet {
@@ -57,6 +68,7 @@ impl Engine {
     pub fn transcribe(&mut self, samples: &[f32], options: TranscribeOptions) -> anyhow::Result<TranscribeResult> {
         match self {
             Self::Whisper(context) => context.transcribe(samples, options).map_err(Into::into),
+            Self::SenseVoice(engine) => engine.transcribe(samples, options, StreamCallbacks::default()),
             Self::Nemotron { model, vad } => {
                 if options.translate {
                     bail!("Nemotron does not support translation");
@@ -122,6 +134,7 @@ impl Engine {
     ) -> anyhow::Result<TranscribeResult> {
         match self {
             Self::Whisper(context) => context.transcribe_stream(samples, options, callbacks).map_err(Into::into),
+            Self::SenseVoice(engine) => engine.transcribe(samples, options, callbacks),
             Self::Nemotron { model, vad } => {
                 if options.translate {
                     bail!("Nemotron does not support translation");
@@ -212,6 +225,7 @@ impl Engine {
     pub fn capabilities(&self) -> EngineCapabilities {
         match self {
             Self::Whisper(_) => whisper_capabilities(),
+            Self::SenseVoice(engine) => engine.capabilities(),
             Self::Nemotron { model, .. } => EngineCapabilities {
                 engine: "nemotron".to_string(),
                 requires_vad: true,

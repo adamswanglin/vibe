@@ -1,4 +1,4 @@
-<!-- source: 1d964213251f -->
+<!-- source: 2a3a8e2cef04 -->
 
 # 🌟 Vibe 모델 🌟
 
@@ -52,6 +52,13 @@ Vibe 모델 페이지에 오신 것을 환영합니다! 이 페이지에서는 V
 
 [👉 모델 보기](https://huggingface.co/vibe-app/nemotron-3.5-asr-streaming-0.6b-gguf)  
 [🔽 Q4_K_M 다운로드](https://huggingface.co/vibe-app/nemotron-3.5-asr-streaming-0.6b-gguf/resolve/main/nemotron-3.5-asr-streaming-0.6b-Q4_K_M.gguf?download=true)
+
+### 🀄 SenseVoice Small
+
+FunASR 엔진으로 중국어, 광동어, 영어, 일본어, 한국어를 지원하며, 작은 크기로도 뛰어난 다국어 정확도를 제공합니다.
+
+[👉 Magic Setup](vibe://download/?url=https://huggingface.co/FunAudioLLM/SenseVoiceSmall-GGUF/resolve/main/sensevoice-small-q8.gguf)  
+[🔽 직접 다운로드](https://huggingface.co/FunAudioLLM/SenseVoiceSmall-GGUF/resolve/main/sensevoice-small-q8.gguf?download=true)
 
 ### 다른 언어에 최적화된 모델
 

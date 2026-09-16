@@ -1594,6 +1594,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "sensevoice-rs"
+version = "0.1.0"
+dependencies = [
+ "ggml-rs-sys",
+ "thiserror",
+ "vad-rs",
+]
+
+[[package]]
 name = "serde"
 version = "1.0.228"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2218,6 +2227,7 @@ dependencies = [
  "nemotron-rs",
  "parakeet-rs",
  "reqwest",
+ "sensevoice-rs",
  "serde",
  "serde_json",
  "tempfile",

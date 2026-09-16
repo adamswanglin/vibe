@@ -171,20 +171,41 @@ function runTranscribe(
 export const serverHandlers: CommandHandlerMap = {
 	get_models_folder: () => MODELS_FOLDER,
 
-	// ({ modelPath }) - every mock model reports the same whisper capabilities.
-	get_model_metadata: () => ({
-		format: 'gguf',
-		capabilities: {
-			engine: 'whisper',
-			requires_vad: false,
-			languages: MOCK_LANGUAGES,
-			language_detection: true,
-			streaming: true,
-			translation: true,
-			timestamps: true,
-			text_prompts: true,
-		},
-	}),
+	// ({ modelPath }) - the real server sniffs the GGUF architecture; the mock goes by the file name.
+	get_model_metadata: (args) => {
+		if (
+			String(args.path ?? '')
+				.toLowerCase()
+				.includes('sensevoice')
+		) {
+			return {
+				format: 'gguf',
+				capabilities: {
+					engine: 'sensevoice',
+					requires_vad: true,
+					languages: [],
+					language_detection: true,
+					streaming: false,
+					translation: false,
+					timestamps: true,
+					text_prompts: false,
+				},
+			}
+		}
+		return {
+			format: 'gguf',
+			capabilities: {
+				engine: 'whisper',
+				requires_vad: false,
+				languages: MOCK_LANGUAGES,
+				language_detection: true,
+				streaming: true,
+				translation: true,
+				timestamps: true,
+				text_prompts: true,
+			},
+		}
+	},
 
 	load_model: async () => {
 		await sleep(300)

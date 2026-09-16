@@ -40,6 +40,12 @@ pub(in crate::server) async fn model_metadata(Json(request): Json<ModelMetadataR
                 });
         }
 
+        if let Ok(info) = sensevoice_rs::Model::metadata(&path) {
+            if info.architecture.starts_with("sensevoice") {
+                return Ok(crate::engine::sensevoice::capabilities());
+            }
+        }
+
         if let Ok(info) = parakeet_rs::Model::metadata(&path) {
             if info.architecture == "parakeet" && info.head_kind == "tdt" && info.variant.contains("v3") {
                 return Ok(crate::engine::EngineCapabilities {
@@ -114,21 +120,27 @@ pub(in crate::server) async fn load_model(State(state): State<AppState>, Json(re
         );
     }
 
-    let mut model = state.unload_timeout.acquire(state.inner.clone()).await;
     let gpu_device = request.gpu_device.unwrap_or(-1);
-    match model.load_model(&request.path, gpu_device, request.no_gpu) {
-        Ok(()) => (
-            StatusCode::OK,
-            Json(ModelStatusResponse {
-                status: "loaded",
-                model: model.model_name.clone(),
-            }),
-        )
-            .into_response(),
-        Err(err) => error(
+    let mut model = state.unload_timeout.acquire(state.inner.clone()).await;
+    match tokio::task::spawn_blocking(move || {
+        model.load_model(&request.path, gpu_device, request.no_gpu)?;
+        Ok::<_, anyhow::Error>(model.model_name.clone())
+    })
+    .await
+    {
+        Ok(Ok(model)) => (StatusCode::OK, Json(ModelStatusResponse { status: "loaded", model })).into_response(),
+        Ok(Err(err)) if err.downcast_ref::<crate::engine::sensevoice::InvalidDevice>().is_some() => {
+            error(StatusCode::BAD_REQUEST, "invalid_request", &format!("failed to load model: {err:#}"))
+        }
+        Ok(Err(err)) => error(
             StatusCode::INTERNAL_SERVER_ERROR,
             crate::server::engine_error_code(&err),
-            &format!("failed to load model: {err}"),
+            &format!("failed to load model: {err:#}"),
+        ),
+        Err(err) => error(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "internal_error",
+            &format!("model load task failed: {err}"),
         ),
     }
 }
